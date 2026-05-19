@@ -20,7 +20,7 @@ function lerPreferencia(){
   try{return localStorage.getItem(KEY)==='1';}catch(e){return false;}
 }
 
-function criarBotao(){
+function criarBotao(){if(document.getElementById('lw-btn-dark'))return;
   if(document.getElementById(BTN_ID))return;
   var btn=document.createElement('button');
   btn.id=BTN_ID;
