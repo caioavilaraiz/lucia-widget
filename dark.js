@@ -30,7 +30,6 @@ function criarBotao(){if(document.getElementById('lw-btn-dark'))return;
     var novo=!document.body.classList.contains('rv-dark');
     aplicar(novo);
     salvar(novo);
-    // sincroniza com o widget da Lucia se estiver aberto
     var widgetBtn=document.getElementById('lw-btn-dark');
     if(widgetBtn) widgetBtn.textContent=novo?'MODO DIA':'MODO NOCHE';
   });
@@ -39,7 +38,7 @@ function criarBotao(){if(document.getElementById('lw-btn-dark'))return;
 
 function injetarCSS(){
   var style=document.createElement('style');
-  style.textContent='body.rv-dark{background:#1A1008!important;color:#F0E6D0!important}body.rv-dark h1,body.rv-dark h2,body.rv-dark h3,body.rv-dark h4,body.rv-dark p,body.rv-dark span,body.rv-dark li,body.rv-dark a{color:#F0E6D0!important}body.rv-dark [style*="background"]{background:#1A1008!important}body.rv-dark .atm-section{background:#1A1008!important}body.rv-dark .atm-btn{background:#5A3020!important;color:#F5F0E8!important}';
+  style.textContent='body.rv-dark{background:#1A1008!important;color:#F0E6D0!important}body.rv-dark *:not(#lucia-widget):not(#lucia-widget *){color:#F0E6D0!important}body.rv-dark div[class*="section"],body.rv-dark div[class*="container"],body.rv-dark div[class*="outer"],body.rv-dark section{background:#1A1008!important}body.rv-dark div[style]{background-color:#1A1008!important;background-image:none!important}body.rv-dark #lucia-widget-section{background:#1A1008!important}body.rv-dark #lucia-widget-section.visivel{display:block!important}';
   document.head.appendChild(style);
 }
 
@@ -56,7 +55,6 @@ function init(){
 
 init();
 
-// expoe para o widget da Lucia sincronizar
 window.rvDark={
   toggle:function(ativo){aplicar(ativo);salvar(ativo);}
 };
