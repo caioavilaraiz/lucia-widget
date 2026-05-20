@@ -3,6 +3,7 @@ var KEY='rv_dark';
 var BTN_ID='rv-dark-btn';
 
 function aplicar(ativo){
+  if(!document.body) return;
   if(ativo){
     document.body.classList.add('rv-dark');
   } else {
@@ -20,12 +21,13 @@ function lerPreferencia(){
   try{return localStorage.getItem(KEY)==='1';}catch(e){return false;}
 }
 
-function criarBotao(){if(document.getElementById('lw-btn-dark'))return;
-  if(document.getElementById(BTN_ID))return;
+function criarBotao(){
+  if(!document.body) return;
+  if(document.getElementById('lw-btn-dark')) return;
+  if(document.getElementById(BTN_ID)) return;
   var btn=document.createElement('button');
   btn.id=BTN_ID;
   btn.textContent=lerPreferencia()?'MODO DIA':'MODO NOCHE';
-  btn.style.cssText='position:fixed;bottom:20px;right:20px;z-index:99999;background:rgba(43,24,16,0.85);color:#F4EDE0;border:1px solid rgba(244,237,224,0.3);padding:8px 14px;border-radius:20px;font-size:11px;font-family:Lora,Georgia,serif;letter-spacing:.05em;cursor:pointer;backdrop-filter:blur(4px)';
   btn.addEventListener('click',function(){
     var novo=!document.body.classList.contains('rv-dark');
     aplicar(novo);
@@ -36,34 +38,17 @@ function criarBotao(){if(document.getElementById('lw-btn-dark'))return;
   document.body.appendChild(btn);
 }
 
-function injetarCSS(){
-  var style=document.createElement('style');
-  style.textContent=[
-    'body.rv-dark{background:#1A1008!important;color:#F0E6D0!important}',
-    'body.rv-dark [class*="atomicat-container"]{background:#1A1008!important}',
-    'body.rv-dark [class*="a-b-o-cont"]{background:#1A1008!important}',
-    'body.rv-dark [class*="a-s-d-"]{background:#1A1008!important}',
-    'body.rv-dark h1,body.rv-dark h2,body.rv-dark h3,body.rv-dark h4,body.rv-dark p,body.rv-dark span,body.rv-dark li{color:#F0E6D0!important}',
-    'body.rv-dark a:not(.a-btn){color:#F0E6D0!important}',
-    'body.rv-dark .a-btn,body.rv-dark .a-b-b{background:#5A3020!important;color:#F5F0E8!important}',
-    'body.rv-dark #lucia-widget-section{background:#1A1008!important}',
-    'body.rv-dark #rv-dark-btn{background:rgba(244,237,224,0.85)!important;color:#1A1008!important;border-color:rgba(43,24,16,0.3)!important}'
-  ].join('');
-  document.head.appendChild(style);
-}
-
 function init(){
-  injetarCSS();
   var ativo=lerPreferencia();
   if(ativo) aplicar(true);
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',criarBotao);
-  } else {
-    criarBotao();
-  }
+  criarBotao();
 }
 
-init();
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',init);
+} else {
+  init();
+}
 
 window.rvDark={
   toggle:function(ativo){aplicar(ativo);salvar(ativo);}
