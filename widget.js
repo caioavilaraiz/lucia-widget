@@ -135,6 +135,6 @@ document.getElementById('lw-file').setAttribute('multiple','multiple');
 document.getElementById('lw-btn-anexo').addEventListener('click',function(){document.getElementById('lw-file').value='';document.getElementById('lw-file').click();});
 document.getElementById('lw-file').addEventListener('change',function(){if(this.files&&this.files.length>0)mostrarPreview(Array.prototype.slice.call(this.files));});
 document.getElementById('lw-btn-mic').addEventListener('click',toggleMic);
-document.getElementById('lw-btn-dark').addEventListener('click',function(){var novo=!darkMode;aplicarDark(novo);salvarDark(novo);});}
+var btnDark=document.getElementById('lw-btn-dark');if(btnDark)btnDark.addEventListener('click',function(){var novo=!darkMode;aplicarDark(novo);salvarDark(novo);});}
 init();
 })();
