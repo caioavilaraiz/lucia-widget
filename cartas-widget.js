@@ -11,13 +11,26 @@
   // URL do backend. Ajuste se for diferente.
   var API = "https://lucia-backend.vercel.app";
 
-  // Detecta a semana pela URL (procura "semana-N"). Fallback: data-semana no script, senão 1.
+  // Títulos das 8 cartas (pra o seletor na página única "Cartas para tu familia")
+  var CARTAS = [
+    { n: 1, t: "Carta 1 — Encender el interruptor" },
+    { n: 2, t: "Carta 2 — Quitar lo que apaga" },
+    { n: 3, t: "Carta 3 — Reconstruir el suelo" },
+    { n: 4, t: "Carta 4 — La milpa interior" },
+    { n: 5, t: "Carta 5 — El cortisol oculto" },
+    { n: 6, t: "Carta 6 — Movimiento de los abuelos" },
+    { n: 7, t: "Carta 7 — Mesa familiar" },
+    { n: 8, t: "Carta 8 — Tu nuevo ritmo" }
+  ];
+
+  // Detecta a semana pela URL (procura "semana-N"), se estiver numa página de semana.
+  // Na página única de cartas, retorna null → o widget mostra um seletor de carta.
   function detectarSemana() {
     var m = (location.pathname || "").match(/semana[-\/]?(\d+)/i);
     if (m) return parseInt(m[1], 10);
     var s = document.currentScript && document.currentScript.getAttribute("data-semana");
     if (s) return parseInt(s, 10);
-    return 1;
+    return null;
   }
 
   function getToken() {
@@ -40,6 +53,7 @@
 
   // ---- ESTILOS ----------------------------------------------
   var CSS = ""
+    + "@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@1,500;1,600&display=swap');"
     + "#rv-cp *{box-sizing:border-box;font-family:'Lora',Georgia,serif;}"
     + "#rv-cp{max-width:640px;margin:24px auto;background:#FFFAF0;border:1px solid #E3D5C0;border-radius:18px;padding:28px 24px;box-shadow:0 2px 14px rgba(43,24,16,.05);}"
     + "#rv-cp .rv-cp-tag{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#B8543A;font-weight:700;}"
@@ -76,9 +90,18 @@
     + "<div id='rv-cp-modal'><div class='rv-cp-card' id='rv-cp-inner'></div></div>";
 
   function viewForm() {
+    var seletorCarta = "";
+    if (SEMANA === null) {
+      var opts = CARTAS.map(function (c) {
+        return "<option value='" + c.n + "'>" + c.t + "</option>";
+      }).join("");
+      seletorCarta = "<label>¿Cuál carta quieres personalizar?</label>"
+        + "<select id='rv-cp-carta-sel'>" + opts + "</select>";
+    }
     return ""
       + "<h3>Personalizar con Lucía</h3>"
       + "<div class='rv-cp-sub' style='font-size:14px;margin-bottom:6px;'>Dime para quién es y Lucía la adapta para ti.</div>"
+      + seletorCarta
       + "<label>Nombre de la persona</label>"
       + "<input id='rv-cp-nombre' placeholder='Ej: Ana' />"
       + "<label>Relación</label>"
@@ -171,8 +194,13 @@
       erro.textContent = "Escribe cómo quieres firmar."; return;
     }
 
+    // Semana: da URL (página de semana) ou do seletor (página única de cartas)
+    var semanaUsar = SEMANA;
+    var sel = document.getElementById("rv-cp-carta-sel");
+    if (sel) semanaUsar = parseInt(sel.value, 10);
+
     var payload = {
-      semana: SEMANA,
+      semana: semanaUsar,
       destinatario: rel,
       nombre_destinatario: nombre,
       firma_como: firma_como,
