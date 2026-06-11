@@ -71,9 +71,10 @@
     + "#rv-cp-modal .rv-cp-row{display:flex;gap:10px;}"
     + "#rv-cp-modal .rv-cp-row>div{flex:1;}"
     + "#rv-cp-modal .rv-cp-actions{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;}"
-    + "#rv-cp-modal .rv-cp-sec{background:transparent;color:#B8543A;border:1px solid #B8543A;border-radius:10px;padding:13px 20px;font-size:14px;font-weight:700;cursor:pointer;}"
+    + "#rv-cp-modal .rv-cp-btn{display:inline-block;background:#B8543A;color:#FFFAF0;border:none;border-radius:10px;padding:14px 30px;font-size:16px;font-weight:700;cursor:pointer;}"
+    + "#rv-cp-modal .rv-cp-sec{background:transparent;color:#9a7b63;border:none;border-radius:10px;padding:14px 16px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:underline;}"
     + "#rv-cp-erro{color:#a02020;font-size:14px;margin-top:10px;min-height:18px;}"
-    + "#rv-cp-carta{white-space:pre-wrap;background:#fff;border:1px solid #E3D5C0;border-radius:12px;padding:18px;font-size:15px;line-height:1.6;color:#2B1810;margin-top:8px;}"
+    + "#rv-cp-carta{white-space:pre-wrap;background:linear-gradient(180deg,#fffdf8 0%,#fdf6ea 100%);border:1px solid #E3D5C0;border-radius:14px;padding:32px 30px;font-family:'Lora',Georgia,serif;font-size:16px;line-height:1.85;color:#3b2a1a;margin-top:10px;box-shadow:inset 0 0 40px rgba(184,84,58,0.04);}"
     + "#rv-cp-modal .rv-cp-wa{background:#25D366;color:#fff;border:none;border-radius:10px;padding:13px 22px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;}";
 
   // ---- HTML DO BLOCO -----------------------------------------
@@ -135,7 +136,8 @@
   }
 
   function viewCarta(carta) {
-    var wa = "https://wa.me/?text=" + encodeURIComponent(carta.whatsapp_text || carta.texto || "");
+    var waText = carta.texto || carta.whatsapp_text || "";
+    var wa = "https://wa.me/?text=" + encodeURIComponent(waText);
     return ""
       + "<h3>" + (carta.titulo || "Tu carta") + "</h3>"
       + "<div id='rv-cp-carta'>" + escapeHtml(carta.texto || "") + "</div>"
