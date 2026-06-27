@@ -15,7 +15,7 @@ function rvFeedback(texto,wrap){
   if(wrap.querySelector('.lw-fb'))return;
   var bar=document.createElement('div');bar.className='lw-fb';
   bar.style.cssText='display:flex;gap:14px;flex-wrap:wrap;margin:2px 0 2px 2px;font-size:11px;font-style:italic;color:rgba(139,90,43,.55);';
-  var opts=[{t:'\u00bfTe ayud\u00f3?',k:'me_ayudo'},{t:'No tanto',k:'no_me_ayudo'},{t:'Me tranquiliz\u00f3',k:'tranquilidad'},{t:'Guardar',k:'guardar_consejo'}];
+  var opts=[{t:'Me ayud\u00f3',k:'me_ayudo'},{t:'No tanto',k:'no_me_ayudo'},{t:'Me tranquiliz\u00f3',k:'tranquilidad'},{t:'Guardar',k:'guardar_consejo'}];
   opts.forEach(function(o){
     var a=document.createElement('span');a.textContent=o.t;a.style.cssText='cursor:pointer;border-bottom:1px dotted rgba(139,90,43,.35);';
     a.addEventListener('click',function(){
@@ -23,9 +23,14 @@ function rvFeedback(texto,wrap){
       var payload={tipo:o.k,canal:'web'};
       if(o.k==='guardar_consejo')payload.texto_lucia=texto;
       fetch(API+'/feedback/mensagem',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(){
-        bar.querySelectorAll('span').forEach(function(x){x.setAttribute('data-done','1');x.style.opacity='.4';x.style.cursor='default';x.style.borderBottom='none';});
-        a.style.opacity='1';a.style.fontWeight='600';a.style.color='#b8543a';
-        a.textContent=(o.k==='guardar_consejo')?'\u2713 Guardado en Mi Progreso':'\u2713 '+o.t;
+        bar.querySelectorAll('span').forEach(function(x){x.setAttribute('data-done','1');x.style.cursor='default';x.style.borderBottom='none';});
+        if(o.k==='guardar_consejo'){
+          bar.querySelectorAll('span').forEach(function(x){x.style.opacity='0';});
+          a.style.opacity='1';a.style.fontWeight='600';a.style.color='#b8543a';a.textContent='\u2713 Guardado en Mi Progreso';
+        }
+        var espera=(o.k==='guardar_consejo')?1400:350;
+        bar.style.transition='opacity .5s ease';
+        setTimeout(function(){bar.style.opacity='0';setTimeout(function(){if(bar&&bar.parentNode)bar.parentNode.removeChild(bar);},550);},espera);
       }).catch(function(){a.textContent='\u2717';});
     });
     bar.appendChild(a);
